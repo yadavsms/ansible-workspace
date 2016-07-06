@@ -1,0 +1,20 @@
+---
+  - name: Installation of Jenkins
+    hosts: jenkins_host
+    roles:
+      - { role: ../roles/java }
+    tasks:
+      - block:
+         - apt: name=software-properties-common state=present update_cache=true
+         - apt_key: url=https://jenkins-ci.org/debian/jenkins-ci.org.key state=present
+         - apt_repository: repo="deb http://pkg.jenkins-ci.org/debian binary/" state=present
+         - apt: name=jenkins state=present update_cache=true
+        when: ansible_os_family == "Debian"
+        become: yes
+    
+      - block:
+         - get_url: url=http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo dest=/etc/yum.repos.d/jenkins.repo
+         - rpm_key: key=https://jenkins-ci.org/redhat/jenkins-ci.org.key state=present
+         - yum: name=jenkins state=present
+        when: ansible_os_family == "RedHat"
+        become: yes

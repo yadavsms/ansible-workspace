@@ -1,0 +1,6 @@
+ansible_connection: ssh
+ansible_ssh_host: 172.16.20.86
+ansible_ssh_user: someshy
+ansible_ssh_pass: somesh
+ansible_sudo_pass: somesh
+

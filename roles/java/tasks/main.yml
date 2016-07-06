@@ -1,0 +1,22 @@
+---
+  - block:
+     - apt: name=software-properties-common state=present update_cache=true
+     - apt_repository: repo="ppa:webupd8team/java"
+     - debconf: name='oracle-java8-installer' question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
+     - apt: name=oracle-java8-installer state=present update_cache=true
+     - shell: /usr/bin/java -version 2>&1 | head -1 | awk -F'"' '{print $2}'
+       register: java_version
+     - debug: var=java_version.stdout
+    when: ansible_os_family == "Debian"
+    become: yes
+
+  - block:
+     - yum: name=python-httplib2 state=present
+     - uri: url=http://download.oracle.com/otn-pub/java/jdk/8u91-b14/jdk-8u91-linux-x64.tar.gz HEADER_Cookie="gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" dest=/tmp/ creates=yes
+     - unarchive: src=/tmp/jdk-8u91-linux-x64.tar.gz dest=/opt/ copy=no
+     - shell: update-alternatives --install /usr/bin/java java /opt/jdk1.8.0_91/bin/java 1
+     - shell: /usr/bin/java -version 2>&1 | head -1 | awk -F'"' '{print $2}'
+       register: java_version
+     - debug: var=java_version.stdout
+    when: ansible_os_family == "RedHat"
+    become: yes
