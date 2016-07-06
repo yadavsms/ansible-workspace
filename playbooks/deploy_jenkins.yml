@@ -6,15 +6,17 @@
     tasks:
       - block:
          - apt: name=software-properties-common state=present update_cache=true
-         - apt_key: url=https://jenkins-ci.org/debian/jenkins-ci.org.key state=present
-         - apt_repository: repo="deb http://pkg.jenkins-ci.org/debian binary/" state=present
+         - apt_key: url={{ debian.jenkins_apt_key }} state=present
+         - apt_repository: repo={{ debian.jenkins_apt_repo }} state=present
          - apt: name=jenkins state=present update_cache=true
+         - service: name=jenkins state=started
         when: ansible_os_family == "Debian"
         become: yes
     
       - block:
-         - get_url: url=http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo dest=/etc/yum.repos.d/jenkins.repo
-         - rpm_key: key=https://jenkins-ci.org/redhat/jenkins-ci.org.key state=present
+         - get_url: url={{ redhat.jenkins_rpm_repo }} dest=/etc/yum.repos.d/jenkins.repo
+         - rpm_key: key={{ redhat.jenkins_rpm_key }} state=present
          - yum: name=jenkins state=present
+         - service: name=jenkins state=started
         when: ansible_os_family == "RedHat"
         become: yes

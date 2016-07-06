@@ -1,0 +1,14 @@
+---
+debian:
+  java_repo: "ppa:webupd8team/java"
+  java_version: java8
+  jenkins_apt_key: https://jenkins-ci.org/debian/jenkins-ci.org.key
+  jenkins_apt_repo: "deb http://pkg.jenkins-ci.org/debian binary/"
+  
+redhat:
+  jdk_version: jdk-8u91-linux-x64
+  jdk_path: /opt/jdk1.8.0_91
+  jdk_url: http://download.oracle.com/otn-pub/java/jdk/8u91-b14/jdk-8u91-linux-x64.tar.gz
+  jenkins_rpm_repo: http://pkg.jenkins-ci.org/redhat/jenkins.repo
+  jenkins_rpm_key: https://jenkins-ci.org/redhat/jenkins-ci.org.key
+ 
