@@ -3,20 +3,27 @@
     hosts: jenkins_host
     roles:
       - { role: ../roles/java }
+      - { role: ../roles/jenkins }
+      - { role: ../roles/nginx, when: jenkins.proxy.nginx }
+      - { role: ../roles/apache2, when: jenkins.proxy.apache }
     tasks:
       - block:
-         - apt: name=software-properties-common state=present update_cache=true
-         - apt_key: url={{ debian.jenkins_apt_key }} state=present
-         - apt_repository: repo={{ debian.jenkins_apt_repo }} state=present
-         - apt: name=jenkins state=present update_cache=true
-         - service: name=jenkins state=started
-        when: ansible_os_family == "Debian"
+         - apache2_module: name={{ item }} state=present
+           with_items:
+             - proxy
+             - proxy_http
+             - headers
+             - rewrite
+         - template: src=../templates/jenkins.conf.j2 dest=/etc/apache2/sites-available/jenkins.conf
+         - shell: a2dissite 000-default.conf && a2ensite jenkins.conf
+         - service: name=apache2 state=restarted
+        when: ansible_os_family == "Debian" and jenkins.proxy.apache
         become: yes
-    
+
       - block:
-         - get_url: url={{ redhat.jenkins_rpm_repo }} dest=/etc/yum.repos.d/jenkins.repo
-         - rpm_key: key={{ redhat.jenkins_rpm_key }} state=present
-         - yum: name=jenkins state=present
-         - service: name=jenkins state=started
-        when: ansible_os_family == "RedHat"
+         - template: src=../templates/jenkins_nginx.j2 dest=/etc/nginx/sites-available/jenkins
+         - file: path=/etc/nginx/sites-available/default state=absent
+         - file: src=/etc/nginx/sites-available/jenkins dest=/etc/nginx/sites-enabled/jenkins state=link
+         - service: name=nginx state=restarted
+        when: ansible_os_family == "Debian" and jenkins.proxy.nginx
         become: yes

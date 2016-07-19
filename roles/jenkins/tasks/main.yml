@@ -1,0 +1,17 @@
+---
+  - block:
+     - apt: name=software-properties-common state=present update_cache=true
+     - apt_key: url={{ jenkins.debian.apt_key }} state=present
+     - apt_repository: repo={{ jenkins.debian.apt_repo }} state=present
+     - apt: name=jenkins state=present update_cache=true
+     - service: name=jenkins state=started
+    when: ansible_os_family == "Debian"
+    become: yes
+
+  - block:
+     - get_url: url={{ jenkins.redhat.rpm_repo }} dest=/etc/yum.repos.d/jenkins.repo
+     - rpm_key: key={{ jenkins.redhat.rpm_key }} state=present
+     - yum: name=jenkins state=present
+     - service: name=jenkins state=started
+    when: ansible_os_family == "RedHat"
+    become: yes

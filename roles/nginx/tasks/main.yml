@@ -1,0 +1,13 @@
+---
+  - block:
+     - apt: name={{ nginx.package }} state=present update_cache=true
+     - service: name=nginx state=started
+    when: ansible_os_family == "Debian"
+    become: yes
+
+  - block:
+     - yum: name={{ nginx.rpm_repo }} state=present
+     - yum: name={{ nginx.package }} state=present
+     - service: name=nginx state=started
+    when: ansible_os_family == "RedHat"
+    become: yes

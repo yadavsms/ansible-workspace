@@ -1,0 +1,19 @@
+<VirtualHost *:80>
+	ServerName {{ ansible_fqdn }}
+
+	ServerAdmin webmaster@{{ ansible_fqdn }}
+	DocumentRoot /var/www/html
+
+        ProxyPass         /  http://localhost:8080/ nocanon
+        ProxyPassReverse  /  http://localhost:8080/
+        ProxyRequests     Off
+        AllowEncodedSlashes NoDecode
+        
+        <Proxy http://localhost:8080/*>
+          Order deny,allow
+          Allow from all
+        </Proxy>
+
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
