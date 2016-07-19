@@ -1,14 +1,31 @@
 ---
-debian:
-  java_repo: "ppa:webupd8team/java"
-  java_version: java8
-  jenkins_apt_key: https://jenkins-ci.org/debian/jenkins-ci.org.key
-  jenkins_apt_repo: "deb http://pkg.jenkins-ci.org/debian binary/"
+java:
+  debian:
+    apt_repo: "ppa:webupd8team/java"
+    version: java8
+  redhat:
+    jdk_version: jdk-8u91-linux-x64
+    jdk_path: /opt/jdk1.8.0_91
+    jdk_url: http://download.oracle.com/otn-pub/java/jdk/8u91-b14/jdk-8u91-linux-x64.tar.gz
+
+jenkins:
+  debian:
+    apt_key: https://jenkins-ci.org/debian/jenkins-ci.org.key
+    apt_repo: "deb http://pkg.jenkins-ci.org/debian binary/"
   
-redhat:
-  jdk_version: jdk-8u91-linux-x64
-  jdk_path: /opt/jdk1.8.0_91
-  jdk_url: http://download.oracle.com/otn-pub/java/jdk/8u91-b14/jdk-8u91-linux-x64.tar.gz
-  jenkins_rpm_repo: http://pkg.jenkins-ci.org/redhat/jenkins.repo
-  jenkins_rpm_key: https://jenkins-ci.org/redhat/jenkins-ci.org.key
- 
+  redhat:
+    rpm_repo: http://pkg.jenkins-ci.org/redhat/jenkins.repo
+    rpm_key: https://jenkins-ci.org/redhat/jenkins-ci.org.key
+  proxy:
+    nginx: true
+    apache: false
+
+nginx:
+  package: nginx
+  rpm_repo: http://nginx.org/packages/centos/6/noarch/RPMS/nginx-release-centos-6-0.el6.ngx.noarch.rpm
+
+apache:
+  debian:
+    package: apache2
+  redhat:
+    package: httpd
