@@ -28,7 +28,7 @@ Image create and convert into different format
 Ansible virt-install module with network and bridge(portgroup) support
 
 # Create a new VM with bootstrap from PXE.
-``python
+```python
 - virtinstall:
     name: test1
     ram: 1024
@@ -42,7 +42,7 @@ Ansible virt-install module with network and bridge(portgroup) support
         portgroup: br0
 ``
 # Create a new VM from an existing Image
-``python
+```python
 - virtinstall:
     name: test1
     ram: 1024
