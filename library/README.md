@@ -40,7 +40,7 @@ Ansible virt-install module with network and bridge(portgroup) support
       pxe_interface:
         bridge: virbr0
         portgroup: br0
-``
+```
 # Create a new VM from an existing Image
 ```python
 - virtinstall:
